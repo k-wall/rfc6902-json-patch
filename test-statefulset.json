@@ -1,0 +1,105 @@
+{
+    "apiVersion": "apps/v1",
+    "kind": "StatefulSet",
+    "metadata": {
+        "name": "test"
+    },
+    "spec": {
+        "podManagementPolicy": "OrderedReady",
+        "replicas": 0,
+        "revisionHistoryLimit": 10,
+        "selector": {
+            "matchLabels": {
+                "app": "test"
+            }
+        },
+        "serviceName": "",
+        "template": {
+            "metadata": {
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "test"
+                }
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "env": [
+                            {
+                                "name": "A",
+                                "value": "a"
+                            },
+                            {
+                                "name": "B",
+                                "value": "b"
+                            },
+                            {
+                                "name": "C",
+                                "value": "c"
+                            },
+                            {
+                                "name": "D",
+                                "value": "d"
+                            }
+                        ],
+                        "image": "k8s.gcr.io/nginx-slim:0.8",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "nginx",
+                        "ports": [
+                            {
+                                "containerPort": 80,
+                                "name": "web",
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "resources": {},
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/usr/share/nginx/html",
+                                "name": "www"
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "terminationGracePeriodSeconds": 10
+            }
+        },
+        "updateStrategy": {
+            "rollingUpdate": {
+                "partition": 0
+            },
+            "type": "RollingUpdate"
+        },
+        "volumeClaimTemplates": [
+            {
+                "metadata": {
+                    "creationTimestamp": null,
+                    "name": "www"
+                },
+                "spec": {
+                    "accessModes": [
+                        "ReadWriteOnce"
+                    ],
+                    "resources": {
+                        "requests": {
+                            "storage": "1Gi"
+                        }
+                    },
+                    "storageClassName": "my-storage-class"
+                },
+                "status": {
+                    "phase": "Pending"
+                }
+            }
+        ]
+    },
+    "status": {
+        "replicas": 0
+    }
+}
